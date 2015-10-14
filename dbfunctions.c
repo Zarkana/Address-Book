@@ -126,7 +126,7 @@ int printRecord(struct record * start, char name [])
 *Paramaters: start: an array of record structures, 
 *            name: the name of the record to modify,
 *            address: the address of the newly modified record,
-*            telNumber: the telephone number of the newly modified record,
+*            telno: the telephone number of the newly modified record,
 *****************/
 int modifyRecord (struct record * start, char name [],char address [], char telno[])
 {
