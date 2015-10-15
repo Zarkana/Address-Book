@@ -145,9 +145,41 @@ int modifyRecord(struct record *start, char uname[],char uaddr[], char utelno[])
         printf("char[]:telNumber = %s ", utelno);
         printf("\n***END DEBUG***\n");
     }
-    int count;
-    count = 0;
+    struct record *temp = *start;
+    struct record *previous = *start;
+    int count = 0;
 
+    while ( temp != NULL)
+    {
+        if (strcmp((temp->name), uname) != 0)/*if the names dont match*/
+        {
+            previous = temp;
+            temp = (previous -> next);
+        }
+        else /*if the names do match*/
+        {
+            if (temp == *start)/*if at head*/
+            {
+                printf("deleting head\n");
+                *start = (temp->next);
+                temp = previous;
+                free(temp);
+                count++;
+                return 1 + modifyRecord(start, uname, uaddr, utelno);
+            }
+            else/*if not at head*/
+            {
+                (previous->next) = (temp->next);
+                previous = temp;
+                temp = (previous -> next);
+                
+                /*Modify code*/
+                
+                /*free(previous);*/
+                return 1 + modifyRecord(start, uname, uaddr, utelno);
+            }
+        }
+    }
     return count;
 }
 
@@ -192,6 +224,42 @@ void printAllRecords(struct record *start)
 *****************/
 int deleteRecord(struct record **start, char uname[])
 {
+    struct record *temp = *start;
+    struct record *previous = *start;
+    int deleteCount = 0;
+
+    while ( temp != NULL)
+    {
+        if (strcmp((temp->name),name) != 0)/*if the names dont match*/
+        {
+            previous = temp;
+            temp = (previous -> next);
+        }
+        else /*if the names do match*/
+        {
+            if (temp == *start)/*if at head*/
+            {
+                printf("deleting head\n");
+                *start = (temp->next);
+                temp = previous;
+                free(temp);
+                deleteCount++;
+                return 1 + deleteRecord(start, name);
+            }
+            else/*if not at head*/
+            {
+                (previous->next) = (temp->next);
+                previous = temp;
+                temp = (previous -> next);
+                free(previous);
+                return 1 + deleteRecord(start, name);
+            }
+        }
+    }
+    return deleteCount;
+
+
+/*
     if(DEBUGMODE == 0)
     {
         printf("***DEBUG INFORMATION***\n");
@@ -208,7 +276,7 @@ int deleteRecord(struct record **start, char uname[])
     if ((*start) ==  NULL)
     {
         printf("No items to traverse\n");
-        /*return 0;*/
+    
     }
     else
     {
@@ -238,6 +306,7 @@ int deleteRecord(struct record **start, char uname[])
     *start = home;
 
     return count;
+    */
 }
 
 
