@@ -238,7 +238,7 @@ void readFile(struct record ** recordArray, char inputArray [])
     struct record ** temp = recordArray;
     char theString [100];
     char characterInput;
-    int counter;
+    int counter = 0;
     counter  = 0;
     FILE * infile = fopen(inputArray, "r");
 
@@ -264,43 +264,38 @@ void readFile(struct record ** recordArray, char inputArray [])
 
             if (characterInput == '\n')
             {
+                theString[counter] = '\0';
+
                 if (target == 0)/*name*/
                 {
                     strcpy(name, theString);
-                    theString[0] = '\0';
                     counter = 0;
                     target++;
                 }
                 else if (target == 1) /*address*/
                 {
                     strcpy(address, theString);
-                    theString[0] = '\0';
                     counter = 0;
                     target++;
                 }
                 else if (target == 2) /*yearofbirth*/
                 {
                     yearofbirth = atoi(theString);
-                    theString[0] = '\0';
                     counter = 0;
                     target++;
                 }
                 else if (target == 3) /*telephone number*/
                 {
                     strcpy(telno, theString);
-                    theString[0] = '\0';
                     counter = 0;
                     target = 0;
                     addRecord(temp, name, address, yearofbirth, telno);
-                    name[0] = '\0';
-                    address[0] = '\0';
-                    telno[0] = '\0';
                 }
             }
             else /*if the character is not a null line ie its a regular character*/
             {
-                theString[counter] = characterInput;
-                counter++;   
+              theString[counter] = characterInput;  
+              counter++;   
             }
        } 
     }
