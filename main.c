@@ -30,12 +30,15 @@ int main(int argc, char * argv[])
     char address[80];
     int yearofbirth;
 
-    printf("Now reading file...%s\n", myIOFile);
-    readFile(&start,myIOFile);
+    if (debugMode == 2)
+    {
+        printf("Now reading file...%s\n", myIOFile);  
+    }
+    readFile(&start, myIOFile);
 
     if(argc == 1)
     {
-	debugMode = 1;
+	    debugMode = 1;
     } 
     else if (argc == 2)
     {
@@ -58,7 +61,7 @@ int main(int argc, char * argv[])
 	    return 0;
     }
 
-    printf("Please enter a command:\n");
+    printf("\n----------------COMMANDS----------------\nadd, print, mod, printall, delete, exit\n----------------------------------------\n");
     address[0] = '\0';
 
     do
@@ -113,15 +116,13 @@ int main(int argc, char * argv[])
 		    scanf("%s",name);
 		    deleteRecord(&start, name);
 		}
-		
-		{
-			printf("\n----------------COMMANDS----------------\nadd, print, mod, printall, delete, exit\n----------------------------------------\n");
-		}
+        else
+        {
+            printf("\n----------------COMMANDS----------------\nadd, print, mod, printall, delete, exit\n----------------------------------------\n");
+        }
     }
     while(strcmp(input,"exit") != 0);
 
-    /*WRITE TO FILE*/
-    printf("now writing to file...\n");
     writeFile(start, myIOFile);
 
     return 0;
@@ -138,15 +139,15 @@ void fillArray(int size, char input[])
     while (counter != size)
     {
         previous = current;
-    current = fgetc(stdin);
-    input[counter] = current;
-    if (previous == '\n')
-    {
-        if(current == previous)
+        current = fgetc(stdin);
+        input[counter] = current;
+        if (previous == '\n')
         {
-        break;
+            if(current == previous)
+            {
+                break;
+            }
         }
-    }
     }
 }
 
@@ -158,17 +159,17 @@ void getField (char input [])
 
     while (count < 2)
     {
-    fgets(temp, 100, stdin);
-    input[strlen(input)-1] = ' ';
-    if (strcmp(temp, "\n") ==  0)
-    {
-        count++;
-    }
-    else
-    {
-        strcat(input,temp);
-        count = 0;
-    }
+        fgets(temp, 100, stdin);
+        input[strlen(input)-1] = ' ';
+        if (strcmp(temp, "\n") ==  0)
+        {
+            count++;
+        }
+        else
+        {
+            strcat(input,temp);
+            count = 0;
+        }
     }
     input[strlen(input)-1] = '\0';
 }

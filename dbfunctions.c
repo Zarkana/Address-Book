@@ -169,50 +169,41 @@ void printAllRecords(struct record *start)
 *****************/
 int deleteRecord(struct record ** start, char name[])
 {
-    int deleteCount;
-    deleteCount = 0;
+    struct record *temp = *start;
+    struct record *home = *start;
+    int deleteCount = 0;
 
-    struct record ** dtemp = start;
-    struct record *temp1 = *dtemp;
-    struct record *temp2 = temp1;
-
-    /*If there are no items in linked list to delete from*/
-    if (*dtemp ==  NULL)
+    if ((*start) ==  NULL) /*If there are no items in linked list to delete from*/
     {
         printf("No items to traverse\n");
         return 0;
     }
     else /*if there are items in the linked list*/
     {
-        /*
-        printf("Comparing %s and %s\n", temp1->name, name);
-        if (strcmp(temp1->name, name) == 0)
+        printf("There are items in the linked list\n");
+        while ((*start)->next != NULL) /*Traverse linked list*/
         {
-            printf("It is a match!");
-            free(temp1);
-            temp1 = temp2;
-        }
-        */
-        /*Traverse linked list*/
-        while (temp1->next != NULL)
-        {
-            printf("traversing items\n");
-            temp1 = (temp1)->next;
+            printf("traversing items...\n");
+            *start = (*start)->next;
 
-            printf("Comparing %s and %s\n", temp1->name, name);
-            /*if the name matches*/
-            if (strcmp(temp1->name, name) == 0)
+            printf("Comparing '%s' and '%s'\n", (*start)->name, name);
+            
+            if (strcmp((*start)->name, name) == 0) /*if the name matches*/
             {
-                printf("It is a match!");
-                free(temp1);
-                temp2 = (temp1)->next;
+                printf("'%s' and '%s' match!\n", (*start)->name, name);
+                free(*start);
+                (*start) = temp->next;
             }
-            else
+            else /*if the name doesn't match*/
             {
-                temp2 = (temp2)->next;
+                printf("'%s' and '%s' do not match\n", (*start)->name, name);
+                (*start) = (*start)->next;
             }
         }
+        printf("(*start)->next is now equal to NULL");
     }
+
+    *start = home;
 
     if (debugMode == 2)
     {	
@@ -301,7 +292,10 @@ void readFile(struct record ** recordArray, char inputArray [])
     }
     else
     {
-        printf("Error: There has to be a file named: %s\n", inputArray);
+        if (debugMode == 2)
+        {
+            printf("Error: There has to be a file named: %s\n", inputArray);
+        }
     }
     fclose(infile);
 }
@@ -330,10 +324,13 @@ void writeFile(struct record *myRecord, char nameOfFile [])
     while ((temp) != NULL)
     {
         fprintf(outfile, "%s\n", (temp)->name);
-    	printf("%s is the name I am writing to the file\n", (temp)->name);	
     	fprintf(outfile, "%s\n", replaceChar((temp)->address, strlen((temp)->address), '\n', ' '));
     	fprintf(outfile, "%s\n", (temp)->telno);
     	fprintf(outfile, "%d\n", (temp)->yearofbirth);
+        if (debugMode == 2)
+        {
+            printf("%s is the name I am writing to the file\n", (temp)->name);
+        }
     	temp = (temp)->next;
     }
 

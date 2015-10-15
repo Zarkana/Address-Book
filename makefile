@@ -7,3 +7,4 @@ DEPS = headers.h
 
 headers: main.o dbfunctions.o
 	gcc -o main main.o dbfunctions.o -I. 
+	./main
