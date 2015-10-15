@@ -252,6 +252,8 @@ int deleteRecord(struct record **start, char uname[])
 *****************/
 void cleanup(struct record **start)
 {
+    struct record **temp = NULL;
+    int i = 0;
     if(DEBUGMODE == 0)
     {
         printf("***DEBUG INFORMATION***\n");
@@ -259,8 +261,16 @@ void cleanup(struct record **start)
         printf("struct record **: %x, \n", start);
     }
 
-   /*TODO write cleanup*/
-   
+    printf("Clean all records: \n\n");
+    while (start != NULL)
+    {
+        temp = (*start).next;
+        /*Get the ADRESS of the next one*/
+        i++;
+        printf("Cleaned the linked node at position %d\n", i);
+        free(start);
+        start = temp;
+    }  
 }
 
 
