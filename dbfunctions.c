@@ -1,79 +1,83 @@
 /*******************
-*NAME: Clay Nakamura
 *
-*HOMEWORK: Project 1
+*NAME: Joseph Campbell
+*
+*PROJECT: 1
 *
 *CLASS: ICS212
 *
 *INSTRUCTOR: Ravi Narayan
 *
-*DATE: October 13th 2015
+*DATE: October 6th 2015
 *
-*FILE: dbfunctions.c
+*FILE: storage.c
 *
-*DESCRIPTION: Contains all functions for writing to and from a specified text file
+*DESCRIPTION: Contains the storage functions for project 1
+*
 *******************/
+
 #include "headers.h"
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-
-extern int debugMode;
+extern int DEBUGMODE;
 
 /*****************
 *
 *Function name: addRecord
 *
-*DESCRIPTION: first checks to see if a linked list exists, otherwise it creates a had and fills in the first node
+*DESCRIPTION: create a record even if it already exists with the same name
 *
-*Paramaters: start: a pointer to an array of record structures, 
-*            name: the name field of the record, 
-*            address: the address field of the record, 
-*            yearofbirth: the year of birth of the record, 
-*            telNumber: the telephone number of the record
+*Paramaters: start: a pointer to an array of record structures storing friends, name: the name of friend, address: the address of friend,
+*            yearofbirth: the friends year of birth, telNumber: the number of the friend 
+*
 *****************/
-int addRecord(struct record ** start, char nameInput [], char addressInput [], int yearofbirthInput, char telnoInput[])
+int addRecord(struct record **start, char uname[], char uaddr[], int uyob, char utelno[])
 {
-    struct record ** dtemp = start;
+    if(DEBUGMODE == 0)
+    {
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: addRecord(struct record **, char[], char[], int, char[])\n");
+        printf("struct record **: %x ", start);
+        printf("char[]:name =  %s \n", uname);
+        printf("char[]:address = %s \n", uaddr);
+        printf("int:yearofbirth = %d \n", uyob);
+        printf("char[]:telNumber = %s \n", utelno);
+        printf("\n***END DEBUG***\n");
+    }
+
+    /*struct record ** dtemp = start;*/
 
     struct record *temp;
-    temp = *dtemp;
+    temp = *start;
 
-    /*If adding first time*/
-    if (*dtemp ==  NULL)
+    if (*start ==  NULL)
     {
-        *dtemp = (struct record *) malloc(sizeof(struct record));
-        strcpy(((*dtemp)->name), nameInput);
-	    strcpy(((*dtemp)->address), addressInput);
-	    strcpy(((*dtemp)->telno), telnoInput);
-	    (*dtemp)->yearofbirth = yearofbirthInput;
-	    (*dtemp)->next = NULL;
+        *start = (struct record *) malloc(sizeof(struct record));
+        strcpy(((*(*start)).name), uname);
+        strcpy(((*(*start)).address), uaddr);
+        (*(*start)).yearofbirth = uyob;        
+        strcpy(((*(*start)).telno), utelno);
+
+        (*(*start)).next = NULL;
     }
     else
     {
-        /*Go to the end of the linked list*/
-        while ((temp)->next != NULL)
+        while ((*temp).next != NULL)
         {
-            temp = (temp)->next;
+            temp = (*temp).next;
         }
 
-        (temp)->next = (struct record *) malloc(sizeof(struct record));
-        temp = (temp)->next;
+        (*temp).next = (struct record *) malloc(sizeof(struct record));
+        temp = (*temp).next;
 
-        /*copy parameters*/
-        strcpy((temp)->name, nameInput);
-        strcpy((temp)->address, addressInput);
-        strcpy((temp)->telno, telnoInput);
-        (temp)->yearofbirth = yearofbirthInput;
-        (temp)->next = NULL;
+        strcpy((*temp).name, uname);
+        strcpy((*temp).address, uaddr);
+        (*temp).yearofbirth = uyob;        
+        strcpy((*temp).telno, utelno);
+
+        (*temp).next = NULL;
     }
 
-    if (debugMode == 2)
-    {
-	printf("----------addRecord Parameters----------\n");
-	printf("Name: %s, Address: %s, Year of Birth: %d, Telephone Number: %s\n", nameInput, addressInput, yearofbirthInput, telnoInput);
-	printf("----------------------------------------\n\n");
-    } 
     return 0;
 }
 
@@ -81,302 +85,329 @@ int addRecord(struct record ** start, char nameInput [], char addressInput [], i
 *
 *Function name: printRecord
 *
-*DESCRIPTION: takes in a name and prints all of the records that match that name
+*DESCRIPTION: print on the screen information for all records with the name specified
 *
-*Paramaters: start: an array of record structures, and the name of the record to match
+*Paramaters: start: an array of record structures storing friends, name: the name of friend 
 *
 *****************/
-int printRecord(struct record * start, char name [])
+int printRecord(struct record *start, char uname[])
 {
-    struct record * temp = start;
-    int printCount;
-    printCount = 0;
-
-    printf("Printing records that match the name: %s...\n\n", name);
-
-    while (temp != NULL)
+    if(DEBUGMODE == 0)
     {
-        if (strcmp(name, (temp)->name)== 0)
+   	    printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: printRecord(struct record *, char[])\n");
+        printf("struct record *: %x \n", start);
+        printf("char[]:uname = %s \n", uname);
+   	    printf("\n***END DEBUG***\n");
+    }   
+    
+    /*struct record * temp = start;*/
+    int count;
+    count = 0;
+
+    printf("Records with name: %s\n", uname);
+
+    while (start != NULL)
+    {
+        if (strcmp(uname, (*start).name)== 0)
         {
-            printCount++;
-            printf("Name: %s\nAddress: %s\nBirthyear: %d\nTelephone Number: %s\n\n", (temp)->name, (temp)->address, (temp)->yearofbirth, (temp)->telno);
+            count++;
+            printf("Name: %s\nAddress: %s\nBirthyear: %d\nTel Number: %s\n\n", (*start).name, (*start).address, (*start).yearofbirth, (*start).telno);
         }
-        temp = (temp)->next;
+        start = (*start).next;
     }
 
-    if (debugMode == 2)
-    {
-    	printf("----------printRecord Parameters--------\n");
-    	printf("Name: %s\n", name);
-    	printf("----------------------------------------\n\n");
-    }
-    return printCount;
+    return count;
+    
+    return 0;
 }
+
 
 /*****************
+*
 *Function name: modifyRecord
 *
-*DESCRIPTION: modifies all records that match the name of the input
+*DESCRIPTION: modify only all records with the same name
 *
-*Paramaters: start: an array of record structures, 
-*            name: the name of the record to modify,
-*            address: the address of the newly modified record,
-*            telno: the telephone number of the newly modified record,
+*Paramaters: start: an array of record structures storing friends, name: the name of friend, address: the address of friend,
+*            telNumber: the number of the friend 
+*
 *****************/
-int modifyRecord (struct record * start, char name [],char address [], char telno[])
+int modifyRecord(struct record *start, char uname[],char uaddr[], char utelno[])
 {
-    int modCount;
-    modCount = 0;
-
-    if (debugMode == 2)
+    if(DEBUGMODE == 0)
     {
-	printf("--------modifyRecord Parameters---------\n");
-	printf("Name: %s, Address: %s, Telephone Number:%s\n", name, address, telno);
-	printf("----------------------------------------\n\n");    
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: modifyRecord(struct record *, char[], char[], char[])\n");
+        printf("struct record **: %x, \n", start);
+        printf("char[]:name = %s \n", uname);
+        printf("char[]:address = %s \n", uaddr);
+        printf("char[]:telNumber = %s ", utelno);
+        printf("\n***END DEBUG***\n");
     }
+    int count;
+    count = 0;
 
-    return modCount;
+    return count;
 }
+
 
 /*****************
 *
 *Function name: printAllRecords
 *
-*DESCRIPTION: prints each element in the linked list record structure
+*DESCRIPTION: print the entire address book on the screen
 *
-*Paramaters: start: head of linked list
+*Paramaters: start: an array of record structures storing friends
 *
 *****************/
 void printAllRecords(struct record *start)
 {
-    struct record * temp = start;
-    printf("Printing all records...\n\n");
-    while (temp != NULL)
+    if(DEBUGMODE == 0)
     {
-        printf("Name: %s\nAddress: %s\nBirthyear: %d\nTelephone Number: %s\n\n", (temp)->name, (temp)->address, (temp)->yearofbirth, (temp)->telno);
-	    temp = (temp)->next;
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: printAllRecords(struct record *)\n");
+        printf("struct record *: %x \n", start); 
+        printf("\n***END DEBUG***\n");
+    }
+        
+    /*struct record * temp = start;*/
+    printf("All records: \n\n");
+    while (start != NULL)
+    {
+        printf("Name: %s\nAddress: %s\nBirthyear: %d\nTel Number: %s\n\n", (*start).name, (*start).address, (*start).yearofbirth, (*start).telno);
+        start = (*start).next;
     }
 }
 
+
 /*****************
+*
 *Function name: deleteRecord
 *
-*DESCRIPTION: deletes all records that match the name
+*DESCRIPTION: delete all records, including duplicates based on the name 
 *
-*Paramaters: start: head of the linked list and the name of the records to delete
-*            name: name of the record to delete (including duplicates)
+*Paramaters: start: an array of record structures storing friends, name: the name of friend 
 *
 *****************/
-int deleteRecord(struct record ** start, char name[])
+int deleteRecord(struct record **start, char uname[])
 {
+    if(DEBUGMODE == 0)
+    {
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: deleteRecord(struct record **, char[])\n");
+        printf("struct record *: %x \n", start);
+        printf("char[]:name = %s \n", uname);
+        printf("\n***END DEBUG***\n");
+   }
+   
     struct record *temp = *start;
     struct record *home = *start;
-    int deleteCount = 0;
+    int count = 0;
 
-    if ((*start) ==  NULL) /*If there are no items in linked list to delete from*/
+    if ((*start) ==  NULL)
     {
         printf("No items to traverse\n");
-        return 0;
+        /*return 0;*/
     }
-    else /*if there are items in the linked list*/
+    else
     {
         printf("There are items in the linked list\n");
-        while ((*start)->next != NULL) /*Traverse linked list*/
+        while ((*(*start)).next != NULL)
         {
             printf("traversing items...\n");
-            *start = (*start)->next;
+            *start = (*(*start)).next;
 
-            printf("Comparing '%s' and '%s'\n", (*start)->name, name);
+            printf("Comparing '%s' and '%s'\n", (*(*start)).name, uname);
             
-            if (strcmp((*start)->name, name) == 0) /*if the name matches*/
+            if (strcmp((*(*start)).name, uname) == 0)
             {
-                printf("'%s' and '%s' match!\n", (*start)->name, name);
+                printf("'%s' and '%s' match!\n", (*(*start)).name, uname);
                 free(*start);
-                (*start) = temp->next;
+                (*start) = (*temp).next;
             }
-            else /*if the name doesn't match*/
+            else
             {
-                printf("'%s' and '%s' do not match\n", (*start)->name, name);
-                (*start) = (*start)->next;
+                printf("'%s' and '%s' do not match\n", (*(*start)).name, uname);
+                (*start) = (*(*start)).next;
             }
         }
-        printf("(*start)->next is now equal to NULL");
+        printf("(*(*start)).next is now equal to NULL");
     }
 
     *start = home;
 
-    if (debugMode == 2)
-    {	
-    	printf("--------deleteRecord Parameters--------\n");
-    	printf("Name: %s\n", name);
-    	printf("---------------------------------------\n\n");
-    }
-    return deleteCount;
+    return count;
 }
 
+
 /*****************
-*Function name: readfile
 *
-*DESCRIPTION: reads all files from a text file onto a linked list data structure (loading the program)
+*Function name: cleanup
 *
-*Paramaters: recordArray: pointer to a head of the linked list
-*            inputArray: the name of the file with the extension to be read from
+*DESCRIPTION: destroy all of the records in the linked list and reset the start of the list to NULL
+*
+*Paramaters: start: an array of record structures storing friends, name: the name of the file to be written
 *
 *****************/
-void readFile(struct record ** recordArray, char inputArray [])
+void cleanup(struct record **start)
 {
+    if(DEBUGMODE == 0)
+    {
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: cleanup(struct record **friend)\n");
+        printf("struct record **: %x, \n", start);
+    }
 
-    struct record ** temp = recordArray;
-    char theString [100];
-    char characterInput;
-    int counter = 0;
-    counter  = 0;
-    FILE * infile = fopen(inputArray, "r");
+   /*TODO write cleanup*/
+   
+}
+
+
+/*****************
+*
+*Function name: readfile
+*
+*DESCRIPTION: reads a files contents into a program
+*
+*Paramaters: start: pointer to an array of record structures storing friends, filename: the name of the file to be read
+*
+*****************/
+int readfile(struct record **records, char filename[])
+{
+    if(DEBUGMODE == 0)
+    {
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: readfile(struct record **friend, char filename[])\n");
+        printf("struct record **: %x \n", records);
+        printf("char[]:filename = %s \n", filename);
+        printf("\n***END DEBUG***\n");
+   }    
+    /*struct record ** temp = records;*/
+    FILE *input;
+    char *mode = "r";
+
+    char string [100];
+    char charInput;
+    int i = 0;    
+
+    input = fopen(filename, mode);
 
     char name [100];
     char address [100];
     int yearofbirth;
     char telno [20];
 
-    int target = 0;
-    /*
-    0 name
-    1 address
-    2 yearofbirth
-    3 telno
-    */
+    int currVar = 0;
 
-    /*If the file exists*/
-    if (infile != NULL)
+    if (input != NULL)
     { 
-       while (characterInput != EOF)
+       while (charInput != EOF)
        {
-            characterInput = fgetc(infile);
-
-            if (characterInput == '\n')
+            charInput = fgetc(input);
+            if (charInput == '\n')
             {
-                theString[counter] = '\0';
-
-                if (target == 0)/*name*/
+                string[i] = '\0';
+                if (currVar == 0)
                 {
-                    strcpy(name, theString);
-                    counter = 0;
-                    target++;
+                    strcpy(name, string);
+                    i = 0;
+                    currVar++;
                 }
-                else if (target == 1) /*address*/
+                else if (currVar == 1)
                 {
-                    strcpy(address, theString);
-                    counter = 0;
-                    target++;
+                    strcpy(address, string);
+                    i = 0;
+                    currVar++;
                 }
-                else if (target == 2) /*yearofbirth*/
+                else if (currVar == 2)
                 {
-                    yearofbirth = atoi(theString);
-                    counter = 0;
-                    target++;
+                    yearofbirth = atoi(string);
+                    i = 0;
+                    currVar++;
                 }
-                else if (target == 3) /*telephone number*/
+                else if (currVar == 3)
                 {
-                    strcpy(telno, theString);
-                    counter = 0;
-                    target = 0;
-                    addRecord(temp, name, address, yearofbirth, telno);
+                    strcpy(telno, string);
+                    i = 0;
+                    currVar = 0;
+                    addRecord(records, name, address, yearofbirth, telno);
                 }
             }
-            else /*if the character is not a null line ie its a regular character*/
+            else
             {
-              theString[counter] = characterInput;  
-              counter++;   
+              string[i] = charInput;  
+              i++;   
             }
        } 
     }
-    else
-    {
-        if (debugMode == 2)
-        {
-            printf("Error: There has to be a file named: %s\n", inputArray);
-        }
-    }
-    fclose(infile);
+    fclose(input);
+    return 0;
 }
 
+
 /*****************
+*
 *Function name: writefile
 *
 *DESCRIPTION: writes content into a file
 *
-*Paramaters: myRecord: head of the linked list, 
-*            nameOfFile: name of the file to be written to; with the extension
+*Paramaters: start: an array of record structures storing friends, name: the name of the file to be written
 *
 *****************/
-void writeFile(struct record *myRecord, char nameOfFile [])
+void writefile(struct record *records, char filename[])
 {
-    FILE * outfile = fopen(nameOfFile, "w");
-    struct record *temp = myRecord;
-
-    /*If there is nothing in the structure*/
-    if ((temp) ==  NULL)
+    if(DEBUGMODE == 0)
     {
-        printf("There was nothing to write to the '%s'\n", nameOfFile); 
-	    return;
-    }
-    /*Iterate each record the linked list and print all member fields to output file*/
-    while ((temp) != NULL)
+        printf("***DEBUG INFORMATION***\n");
+        printf("Called Function: writefile(struct record *friend, char filename[])\n");
+        printf("struct record *: %s \n", records);
+        printf("char[]:filename = %s \n", filename);
+        printf("\n***END DEBUG***\n");
+   }    
+   
+    FILE *output;
+    char *mode = "w"; 
+
+    output = fopen(filename, mode);
+
+    struct record *temp = records;
+
+    if (temp ==  NULL)
     {
-        fprintf(outfile, "%s\n", (temp)->name);
-    	fprintf(outfile, "%s\n", replaceChar((temp)->address, strlen((temp)->address), '\n', ' '));
-    	fprintf(outfile, "%s\n", (temp)->telno);
-    	fprintf(outfile, "%d\n", (temp)->yearofbirth);
-        if (debugMode == 2)
-        {
-            printf("%s is the name I am writing to the file\n", (temp)->name);
-        }
-    	temp = (temp)->next;
+        printf("No linked list.\n"); 
+        return;
+    }
+    while (temp != NULL)
+    {
+
+        fprintf(output, "%s\n", (*temp).name);
+        fprintf(output, "%s\n", replaceChar((*temp).address, strlen((*temp).address), '\n', ' '));
+        fprintf(output, "%d\n", (*temp).yearofbirth);
+        fprintf(output, "%s\n", (*temp).telno);        
+        temp = (*temp).next;
+
     }
 
-    fclose(outfile);
-}
-
-/*****************
-*
-*Function name: cleanup
-*
-*DESCRIPTION: destroy all of the records in the linked list
-*
-*Paramaters: start: the pointer to the linked list that needs all elements deleted
-*
-*****************/
-void cleanup(struct record **start)
-{
+    fclose(output);
 
 }
 
-/*****************
-*Function name: replace with character
-*
-*DESCRIPTION: writes content into a file
-*
-*Paramaters: start: head of the linked list, 
-*            name: name of the file to be written to; with the extension
-*
-*****************/
-char * replaceChar (char inputString [], int length, char charToBeReplaced, char replacementChar)
+char * replaceChar (char string[], int length, char charToBeReplaced, char replacementChar)
 {
     int i;
 
     /*Iterate through string and replace all new lines with spaces*/
     for (i = 0; i < length; i++)
     {
-        if (inputString[i] == charToBeReplaced)
-	    {
-	        inputString[i] = replacementChar;	
+        if (string[i] == charToBeReplaced)
+        {
+            string[i] = replacementChar;   
         }
-    	else if (inputString [i] == EOF)
-    	{
-    	    inputString [i] = replacementChar;
-    	}
+        else if (string [i] == EOF)
+        {
+            string [i] = replacementChar;
+        }
     }
-    return inputString;
+    return string;
 }
-
-
