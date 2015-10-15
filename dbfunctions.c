@@ -37,7 +37,9 @@ int addRecord(struct record ** start, char nameInput [], char addressInput [], i
     struct record ** dtemp = start;
 
     struct record *temp;
+    temp = *dtemp;
 
+    /*If adding first time*/
     if (*dtemp ==  NULL)
     {
         *dtemp = (struct record *) malloc(sizeof(struct record));
@@ -46,32 +48,26 @@ int addRecord(struct record ** start, char nameInput [], char addressInput [], i
 	    strcpy(((*dtemp)->telno), telnoInput);
 	    (*dtemp)->yearofbirth = yearofbirthInput;
 	    (*dtemp)->next = NULL;
-        printf("Added a file to the linked list for the first time!\n");
     }
     else
     {
-        printf("This was not my first time adding to the file\n");
+        /*Go to the end of the linked list*/
+        while ((temp)->next != NULL)
+        {
+            temp = (temp)->next;
+        }
+
+        (temp)->next = (struct record *) malloc(sizeof(struct record));
+        temp = (temp)->next;
+
+        strcpy((temp)->name, nameInput);
+        printf("temp is about to get %s\n", nameInput);
+        strcpy((temp)->address, addressInput);
+        strcpy((temp)->telno, telnoInput);
+        (temp)->yearofbirth = yearofbirthInput;
+
+        (temp)->next = NULL;
     }
-
-    temp = *dtemp;
-
-
-    while ((temp)->next != NULL)
-    {
-        printf("one loop");
-	    temp = (temp)->next;
-    }
-
-    (temp)->next = (struct record *) malloc(sizeof(struct record));
-    temp = (temp)->next;
-
-    strcpy((temp)->name, nameInput);
-    printf("temp is about to get %s\n", nameInput);
-    strcpy((temp)->address, addressInput);
-    strcpy((temp)->telno, telnoInput);
-    (temp)->yearofbirth = yearofbirthInput;
-
-    (temp)->next = NULL;
 
     if (debugMode == 2)
     {

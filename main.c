@@ -67,6 +67,7 @@ int main(int argc, char * argv[])
 		/*ADD RECORD*/
         if(strcmp("add", input) == 0)
         {
+            address[0] = '\0';
 		    printf("Enter record address (press enter x3 times):\n");
 		    getField(address);
 
