@@ -8,7 +8,7 @@ struct record
 };
 void fillArray(int, char[]);
 void getField(char[]);
-void readFile(struct record [], char []);
+void readFile(struct record **, char []);
 void writeFile(struct record [], char []);
 int addRecord(struct record **, char [], char [], int, char []);
 int printRecord(struct record *, char []);

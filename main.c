@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
     int yearofbirth;
 
     printf("Now reading file...%s\n", myIOFile);
-    readFile(start,myIOFile);
+    readFile(&start,myIOFile);
 
     if(argc == 1)
     {

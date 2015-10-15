@@ -191,10 +191,10 @@ int deleteRecord(struct record ** start, char name[])
 *            inputArray: the name of the file with the extension to be read from
 *
 *****************/
-void readFile(struct record * recordArray, char inputArray [])
+void readFile(struct record ** recordArray, char inputArray [])
 {
 
-    struct record * temp = recordArray;
+    struct record ** temp = recordArray;
     char theString [100];
     char characterInput;
     int counter;
@@ -206,44 +206,60 @@ void readFile(struct record * recordArray, char inputArray [])
     int yearofbirth;
     char telno [20];
 
+    int target = 0;
+    /*
+    0 name
+    1 address
+    2 yearofbirth
+    3 telno
+    */
+
     /*If the file exists*/
     if (infile != NULL)
     { 
-        /*Populate the string with characters from the infile*/
-        while ((characterInput=fgetc(infile)) != EOF)
-        {
-            theString[counter] = characterInput;
-            counter++;
-        }
-        char s[2] = "\n";
-        char *token;
-       
-        /* get the first token */
-        token = strtok(theString, s);
-       
-        /* walk through other tokens */
-        while( token != NULL ) 
-        {
-            printf( "6Name: %s\n", token );
-            strcpy(name, token);       
-            
-            token = strtok(NULL, s);
-            printf( "6Address: %s\n", token );
-            strcpy(address, token);       
-            
-            token = strtok(NULL, s);
-            printf( "6Yob: %s\n", token );
-            yearofbirth = atoi(token); 
+       while (characterInput != EOF)
+       {
+            characterInput = fgetc(infile);
 
-            token = strtok(NULL, s);
-            printf( "6Telno:%s\n", token ); 
-            strcpy(telno, token);
-
-            printf("Passing into add params: name: %s, address: %s, yearofbirth: %d, telno: %s\n", name, address, yearofbirth, telno);
-            addRecord(&temp, name, address, yearofbirth, telno);
-
-            token = strtok(NULL, s); 
-        }
+            if (characterInput == '\n')
+            {
+                if (target == 0)/*name*/
+                {
+                    strcpy(name, theString);
+                    theString[0] = '\0';
+                    counter = 0;
+                    target++;
+                }
+                else if (target == 1) /*address*/
+                {
+                    strcpy(address, theString);
+                    theString[0] = '\0';
+                    counter = 0;
+                    target++;
+                }
+                else if (target == 2) /*yearofbirth*/
+                {
+                    yearofbirth = atoi(theString);
+                    theString[0] = '\0';
+                    counter = 0;
+                    target++;
+                }
+                else if (target == 3) /*telephone number*/
+                {
+                    strcpy(telno, theString);
+                    theString[0] = '\0';
+                    counter = 0;
+                    target = 0;
+                    printf("Adding record with following paramters: name-%s, address-%s, yearofbirth-%d, telno-%s",name,address,yearofbirth,telno);
+                    addRecord(temp, name, address, yearofbirth, telno);
+                }
+            }
+            else /*if the character is not a null line ie its a regular character*/
+            {
+                theString[counter] = characterInput;
+                counter++;   
+            }
+       } 
     }
     else
     {
