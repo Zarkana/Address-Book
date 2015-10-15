@@ -60,12 +60,11 @@ int addRecord(struct record ** start, char nameInput [], char addressInput [], i
         (temp)->next = (struct record *) malloc(sizeof(struct record));
         temp = (temp)->next;
 
+        /*copy parameters*/
         strcpy((temp)->name, nameInput);
-        printf("temp is about to get %s\n", nameInput);
         strcpy((temp)->address, addressInput);
         strcpy((temp)->telno, telnoInput);
         (temp)->yearofbirth = yearofbirthInput;
-
         (temp)->next = NULL;
     }
 
@@ -173,6 +172,48 @@ int deleteRecord(struct record ** start, char name[])
     int deleteCount;
     deleteCount = 0;
 
+    struct record ** dtemp = start;
+    struct record *temp1 = *dtemp;
+    struct record *temp2 = temp1;
+
+    /*If there are no items in linked list to delete from*/
+    if (*dtemp ==  NULL)
+    {
+        printf("No items to traverse\n");
+        return 0;
+    }
+    else /*if there are items in the linked list*/
+    {
+        /*
+        printf("Comparing %s and %s\n", temp1->name, name);
+        if (strcmp(temp1->name, name) == 0)
+        {
+            printf("It is a match!");
+            free(temp1);
+            temp1 = temp2;
+        }
+        */
+        /*Traverse linked list*/
+        while (temp1->next != NULL)
+        {
+            printf("traversing items\n");
+            temp1 = (temp1)->next;
+
+            printf("Comparing %s and %s\n", temp1->name, name);
+            /*if the name matches*/
+            if (strcmp(temp1->name, name) == 0)
+            {
+                printf("It is a match!");
+                free(temp1);
+                temp2 = (temp1)->next;
+            }
+            else
+            {
+                temp2 = (temp2)->next;
+            }
+        }
+    }
+
     if (debugMode == 2)
     {	
     	printf("--------deleteRecord Parameters--------\n");
@@ -250,8 +291,10 @@ void readFile(struct record ** recordArray, char inputArray [])
                     theString[0] = '\0';
                     counter = 0;
                     target = 0;
-                    printf("Adding record with following paramters: name-%s, address-%s, yearofbirth-%d, telno-%s",name,address,yearofbirth,telno);
                     addRecord(temp, name, address, yearofbirth, telno);
+                    name[0] = '\0';
+                    address[0] = '\0';
+                    telno[0] = '\0';
                 }
             }
             else /*if the character is not a null line ie its a regular character*/
